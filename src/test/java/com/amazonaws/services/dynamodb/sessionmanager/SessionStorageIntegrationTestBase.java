@@ -19,6 +19,7 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -48,7 +49,7 @@ public class SessionStorageIntegrationTestBase extends AWSTestBase {
         tableName = getUniqueTableName();
         DynamoUtils.createSessionTable(dynamoClient, tableName, 10L, 10L);
         Tables.waitForTableToBecomeActive(dynamoClient, tableName);
-        dynamoMapper = DynamoUtils.createDynamoMapper(dynamoClient, tableName);
+        dynamoMapper = DynamoUtils.createDynamoMapper(dynamoClient, tableName, DynamoDBMapperConfig.ConsistentReads.EVENTUAL);
     }
 
     /**

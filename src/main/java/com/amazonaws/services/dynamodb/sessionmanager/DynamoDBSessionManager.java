@@ -16,6 +16,7 @@ package com.amazonaws.services.dynamodb.sessionmanager;
 
 import java.io.File;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.session.PersistentManagerBase;
@@ -61,6 +62,7 @@ public class DynamoDBSessionManager extends PersistentManagerBase {
     private String proxyHost;
     private Integer proxyPort;
     private boolean deleteCorruptSessions = false;
+    private DynamoDBMapperConfig.ConsistentReads consistentReads = DynamoDBMapperConfig.ConsistentReads.EVENTUAL;
 
     private static final Log logger = LogFactory.getLog(DynamoDBSessionManager.class);
 
@@ -127,6 +129,8 @@ public class DynamoDBSessionManager extends PersistentManagerBase {
     public void setProxyPort(Integer proxyPort) {
         this.proxyPort = proxyPort;
     }
+
+    public void setConsistentReads(DynamoDBMapperConfig.ConsistentReads consistentReads) { this.consistentReads = consistentReads; }
 
     public void setDeleteCorruptSessions(boolean deleteCorruptSessions) {
         this.deleteCorruptSessions = deleteCorruptSessions;
@@ -244,7 +248,7 @@ public class DynamoDBSessionManager extends PersistentManagerBase {
     }
 
     private DynamoSessionStorage createSessionStorage(AmazonDynamoDBClient dynamoClient) {
-        DynamoDBMapper dynamoMapper = DynamoUtils.createDynamoMapper(dynamoClient, tableName);
+        DynamoDBMapper dynamoMapper = DynamoUtils.createDynamoMapper(dynamoClient, tableName, consistentReads);
         return new DynamoSessionStorage(dynamoMapper, getSessionConverter());
     }
 

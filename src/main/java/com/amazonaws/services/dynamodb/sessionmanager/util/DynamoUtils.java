@@ -50,8 +50,11 @@ public class DynamoUtils {
     /**
      * Create a new DynamoDBMapper with table name override
      */
-    public static DynamoDBMapper createDynamoMapper(AmazonDynamoDBClient dynamoDbClient, String tableName) {
-        return new DynamoDBMapper(dynamoDbClient, new DynamoDBMapperConfig(new TableNameOverride(tableName)));
+    public static DynamoDBMapper createDynamoMapper(AmazonDynamoDBClient dynamoDbClient, String tableName, DynamoDBMapperConfig.ConsistentReads consistentReads) {
+        DynamoDBMapperConfig.Builder builder = new DynamoDBMapperConfig.Builder();
+        builder.setTableNameOverride(new TableNameOverride(tableName));
+        builder.setConsistentReads(consistentReads);
+        return new DynamoDBMapper(dynamoDbClient, builder.build());
     }
 
 }

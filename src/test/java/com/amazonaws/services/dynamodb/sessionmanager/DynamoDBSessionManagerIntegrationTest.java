@@ -43,10 +43,10 @@ import com.amazonaws.services.dynamodbv2.model.DescribeTableRequest;
 import com.amazonaws.services.dynamodbv2.model.GetItemResult;
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
 import com.amazonaws.services.dynamodbv2.model.TableDescription;
-import com.amazonaws.test.AWSTestBase;
+import com.amazonaws.test.AWSIntegrationTestBase;
 import com.amazonaws.util.ImmutableMapParameter;
 
-public class DynamoDBSessionManagerIntegrationTest extends AWSTestBase {
+public class DynamoDBSessionManagerIntegrationTest extends AWSIntegrationTestBase {
 
     private static final String SESSION_ID = "1234";
     private static final int MAX_IDLE_BACKUP_SECONDS = 1;
@@ -62,7 +62,7 @@ public class DynamoDBSessionManagerIntegrationTest extends AWSTestBase {
     @BeforeClass
     public static void setupFixture() throws Exception {
         setUpCredentials();
-        dynamo = new AmazonDynamoDBClient(credentials);
+        dynamo = new AmazonDynamoDBClient(getCredentials());
 
         String workingDir = System.getProperty("java.io.tmpdir");
         File webappDirectory = Files.createTempDirectory(Paths.get(workingDir), null).toFile();
@@ -231,8 +231,8 @@ public class DynamoDBSessionManagerIntegrationTest extends AWSTestBase {
     }
 
     private void configureWithExplicitCredentials(DynamoDBSessionManager sessionManager) {
-        sessionManager.setAwsAccessKey(credentials.getAWSAccessKeyId());
-        sessionManager.setAwsSecretKey(credentials.getAWSSecretKey());
+        sessionManager.setAwsAccessKey(getCredentials().getAWSAccessKeyId());
+        sessionManager.setAwsSecretKey(getCredentials().getAWSSecretKey());
         sessionManager.setTable(sessionTableName);
         webapp.setManager(sessionManager);
     }
